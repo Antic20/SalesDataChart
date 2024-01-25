@@ -1,0 +1,83 @@
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<p>
+	<div class="row">
+		<div class="col-1">
+		<label><b>Chart-Type</b></label>
+	</div>
+	<div class="col-2">
+		<select id="ChartType" class="form-control" style="width:150px;">
+		<option selected>--Select Chart Type--</option>
+		<option>bar</option>
+		<option>line</option>
+		<option>pie</option>
+		<option>doughnut</option>
+		</select>
+	</div>
+	
+	<div class="col-4">
+		<input id"ID" value="Show Graph" type="button"/>
+	</div>
+	</div>
+</p>
+<br />
+<div id="ChartView">
+<canvas id="myChart" style="max-width:400px;max-height:430px;"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="text/javascript">
+
+	$(function () {
+		$("#ID").click(function (){
+	
+
+			var chartType = $("#ChartType").val();
+
+		    var chartView = document.getElementById('ChartView');
+			
+			chartView.innerHTML='&nbsp;'
+
+			$('#ChrtView').append('<canvas id="myChart" style="max-width:750px;max-height:400px;"></canvas>');
+	$.ajax({
+		type: "POST",
+		url: "/SalesRecord/GetSalesData",
+		data: "",
+		contextType: "application/json; charset=utf-8",
+		dataType:"json",
+		success:OnSuccessResult,
+		error: OnError
+		});
+	
+		function OnSuccessResult (data) {
+			var _data=data;	
+			var _chartLabels =_data[0];
+			var _chartData=_data[1];
+
+			var barColor= ["red","green","blue","orange","brown","purple"];
+
+			new Chart("myChart",
+			{
+					type: "bar",
+					data: {
+						labels: _chartLabels,
+						datasets : [{
+							backgroundColor: barColor,
+							data:_chartData
+						}]
+					}
+				});
+		}
+
+		function OnErorr (err){
+
+
+		}
+
+		});
+	});
+	
+</script>
